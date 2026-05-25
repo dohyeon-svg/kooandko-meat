@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쿠앤코미트 | 견적 요청</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C8281E;
+  --red-dark: #9E1D15;
+  --red-light: rgba(200,40,30,0.08);
+  --charcoal: #1C1C1E;
+  --gray-1: #3A3A3C;
+  --gray-2: #636366;
+  --gray-3: #AEAEB2;
+  --gray-4: #D1D1D6;
+  --gray-5: #F2F2F7;
+  --white: #FFFFFF;
+  --success: #34C759;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #F0F0F5;
+  color: var(--charcoal);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--charcoal);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon img {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
+.logo-text-wrap { line-height: 1; margin-left: 8px; }
+.logo-ko {
+  font-size: 18px;
+  font-weight: 900;
+  color: #B22020;
+  letter-spacing: -0.5px;
+  display: block;
+}
+.logo-en {
+  font-size: 9px;
+  font-weight: 800;
+  color: #B22020;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 3px;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--charcoal);
+  padding: 44px 32px 52px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(200,40,30,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  animation: blink 1.5s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero h1 {
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
+  line-height: 1.18;
+  letter-spacing: -1.2px;
+  margin-bottom: 14px;
+}
+
+.hero h1 .accent { color: var(--red); }
+
+.hero-desc {
+  color: rgba(255,255,255,0.45);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.hero-wave {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28px;
+  background: #F0F0F5;
+  clip-path: ellipse(54% 100% at 50% 100%);
+}
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 0;
+}
+
+.step-nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-3);
+}
+
+.step-item.active { color: var(--red); }
+.step-item.done { color: var(--success); }
+
+.step-circle {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--gray-4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  color: var(--gray-2);
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.step-item.active .step-circle { background: var(--red); color: white; box-shadow: 0 0 0 4px rgba(200,40,30,0.15); }
+.step-item.done .step-circle { background: var(--success); color: white; }
+.step-item.done .step-circle::before { content: '✓'; }
+.step-item.done .step-num { display: none; }
+
+.step-connector {
+  flex: 1;
+  height: 1px;
+  background: var(--gray-4);
+  margin: 0 8px;
+  flex-shrink: 0;
+  min-width: 20px;
+}
+
+.progress-bar {
+  height: 3px;
+  background: var(--gray-4);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-dark), var(--red));
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── FORM WRAP ── */
+.form-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 20px 80px;
+}
+
+/* ── CARD ── */
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  display: none;
+  animation: slideUp 0.3s ease;
+}
+
+.card.active { display: block; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-5);
+}
+
+/* ── FIELDS ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gray-1);
+  margin-bottom: 8px;
+  letter-spacing: -0.1px;
+}
+
+.field-label .req { color: var(--red); margin-left: 2px; }
+.field-label .opt { font-size: 11px; font-weight: 400; color: var(--gray-3); margin-left: 4px; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: var(--charcoal);
+  background: white;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(200,40,30,0.1);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── PILL SELECTORS ── */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.pill {
+  padding: 8px 14px;
+  border: 1.5px solid var(--gray-4);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.pill:hover { border-color: var(--gray-3); color: var(--charcoal); }
+.pill.selected {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ── STATIC BOX ── */
+.static-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--gray-5);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--gray-2);
+}
+
+.static-box strong { color: var(--charcoal); font-weight: 600; }
+
+.static-box::before {
+  content: '🔒';
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* ── SEARCH DROPDOWN ── */
+.search-wrap { position: relative; }
+
+.search-input {
+  width: 100%;
+  padding: 11px 14px 11px 36px;
+  border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13.5px;
+  color: var(--charcoal);
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  background: white url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='6' cy='6' r='4.5' stroke='%23AEAEB2' stroke-width='1.5'/%3E%3Cpath d='M10 10L12.5 12.5' stroke='%23AEAEB2' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 13px center;
+}
+
+.search-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(200,40,30,0.1);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  z-index: 200;
+  background: white;
+  border: 1.5px solid var(--red);
+  border-radius: var(--radius-sm);
+  max-height: 210px;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.dropdown.open { display: block; }
+
+.dropdown-item {
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--gray-1);
+  transition: background 0.1s;
+}
+
+.dropdown-item:hover { background: var(--red-light); color: var(--red); }
+.dropdown-item.empty { color: var(--gray-3); cursor: default; }
+.dropdown-item.empty:hover { background: none; }
+
+/* ── TAGS ── */
+.tag-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  min-height: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--red);
+  color: white;
+  padding: 5px 10px 5px 11px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tag-remove {
+  width: 14px; height: 14px;
+  background: rgba(255,255,255,0.3);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  line-height: 1;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.tag-remove:hover { background: rgba(255,255,255,0.5); }
+
+/* ── ITEM CARDS (품목별 설정) ── */
+.item-cards-wrap { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+.item-card {
+  border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-md);
+  overflow: visible;
+  transition: border-color 0.2s;
+  position: relative;
+}
+
+.item-card:focus-within { border-color: rgba(200,40,30,0.4); }
+
+.item-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--gray-5);
+  border-bottom: 1px solid var(--gray-4);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.item-card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-card-name::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--red);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.item-card-remove {
+  background: none;
+  border: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--gray-3);
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.item-card-remove:hover { background: rgba(200,40,30,0.1); color: var(--red); }
+
+.item-card-body {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.item-card-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.item-card-field label .req { color: var(--red); }
+.item-card-field label .opt { color: var(--gray-3); font-weight: 400; }
+
+.item-card-field .mini-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mini-pill {
+  padding: 5px 10px;
+  border: 1.5px solid var(--gray-4);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--gray-2);
+  cursor: pointer;
+  transition: all 0.13s;
+  user-select: none;
+}
+
+.mini-pill:hover { border-color: var(--gray-3); color: var(--charcoal); }
+.mini-pill.selected { border-color: var(--red); background: var(--red-light); color: var(--red); font-weight: 600; }
+
+.item-card-field .mini-search-wrap { position: relative; z-index: 10; }
+.item-card-field .mini-search-wrap:focus-within { z-index: 500; }
+.item-card-field .mini-search {
+  width: 100%;
+  padding: 8px 10px 8px 28px;
+  border: 1.5px solid var(--gray-4);
+  border-radius: 6px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  color: var(--charcoal);
+  outline: none;
+  transition: border-color 0.15s;
+  background: white url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='6' cy='6' r='4.5' stroke='%23AEAEB2' stroke-width='1.5'/%3E%3Cpath d='M10 10L12.5 12.5' stroke='%23AEAEB2' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 9px center;
+}
+
+.item-card-field .mini-search:focus { border-color: var(--red); }
+.item-card-field .mini-dropdown {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0; right: 0;
+  z-index: 500;
+  background: white;
+  border: 1.5px solid var(--red);
+  border-radius: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.item-card-field .mini-dropdown.open { display: block; }
+.item-card-field .mini-dropdown-item {
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--gray-1);
+  transition: background 0.1s;
+}
+
+.item-card-field .mini-dropdown-item:hover { background: var(--red-light); color: var(--red); }
+.item-card-field .mini-tag-area { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.item-card-field .mini-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--red);
+  color: white;
+  padding: 3px 8px 3px 9px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.item-card-field .mini-tag button {
+  background: rgba(255,255,255,0.3);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  width: 12px; height: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* full width field in item card */
+.item-card-field.full { grid-column: 1 / -1; }
+
+/* ── ADDRESS ── */
+.address-section { display: none; }
+.address-section.visible { display: block; }
+
+/* ── NAV BUTTONS ── */
+.nav-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-prev {
+  flex: 1;
+  padding: 14px;
+  background: white;
+  border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--gray-2);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.btn-prev:hover { border-color: var(--charcoal); color: var(--charcoal); }
+
+.btn-next {
+  flex: 2;
+  padding: 14px;
+  background: var(--red);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-next:hover { background: var(--red-dark); }
+.btn-next:active { transform: scale(0.99); }
+.btn-next:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── SUCCESS ── */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 64px 24px 80px;
+}
+
+.success-screen.show { display: block; }
+
+.success-icon-wrap {
+  width: 72px; height: 72px;
+  background: var(--success);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 0 0 12px rgba(52,199,89,0.12);
+}
+
+.success-icon-wrap svg { width: 32px; height: 32px; }
+
+.success-screen h2 {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--charcoal);
+  margin-bottom: 12px;
+}
+
+.success-screen p {
+  color: var(--gray-2);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--gray-5); margin: 18px 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 520px) {
+  header { padding: 0 20px; }
+  .hero { padding: 36px 20px 48px; }
+  .hero h1 { font-size: 28px; }
+  .progress-wrap, .form-wrap { padding-left: 16px; padding-right: 16px; }
+  .field-row { grid-template-columns: 1fr; }
+  .item-card-body { grid-template-columns: 1fr; }
+  .item-card-field.full { grid-column: 1; }
+}
+
+/* ── ADD PANEL ── */
+.add-panel {
+  background: var(--gray-5);
+  border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 4px;
+}
+.add-panel-title {
+  font-size: 11px; font-weight: 700; color: var(--red);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+}
+.btn-add {
+  width: 100%; padding: 12px;
+  background: var(--charcoal); border: none; border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 700;
+  color: white; cursor: pointer; transition: background 0.18s; margin-top: 8px;
+}
+.btn-add:hover { background: #333; }
+/* ── PRODUCT LIST ── */
+.product-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.product-item {
+  background: white; border: 1.5px solid var(--gray-4);
+  border-radius: var(--radius-md); overflow: hidden; animation: slideUp 0.2s ease;
+}
+.product-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px; background: var(--charcoal);
+}
+.product-item-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: white;
+}
+.product-item-cat {
+  font-size: 10px; font-weight: 700; background: var(--red);
+  color: white; padding: 2px 7px; border-radius: 3px;
+}
+.product-item-remove {
+  background: rgba(255,255,255,0.15); border: none; width: 22px; height: 22px;
+  border-radius: 50%; color: white; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+}
+.product-item-remove:hover { background: rgba(200,40,30,0.6); }
+.product-item-body { padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+.product-info-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--gray-5); border-radius: 4px; padding: 4px 9px;
+  font-size: 11.5px; color: var(--gray-1);
+}
+.chip-label {
+  font-weight: 700; color: var(--gray-3); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">
+      <img src="data:image/png;base64,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" alt="쿠앤코미트 로고">
+    </div>
+    <div class="logo-text-wrap">
+      <span class="logo-ko">쿠앤코미트</span>
+      <span class="logo-en">KOO &amp; KO MEAT</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">견적 요청</div>
+    <h1>원하는 육류를<br><span class="accent">최저가</span>로 공급해드립니다</h1>
+    <p class="hero-desc">품목과 수량을 입력하시면 전문가가<br>최저가 업체를 선별하여 안내드립니다.</p>
+  </div>
+  <div class="hero-wave"></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="step-nav">
+    <div class="step-item active" id="sLabel1">
+      <div class="step-circle"><span class="step-num">1</span></div>
+      <span>업체 정보</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="sLabel2">
+      <div class="step-circle"><span class="step-num">2</span></div>
+      <span>상품 정보</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="sLabel3">
+      <div class="step-circle"><span class="step-num">3</span></div>
+      <span>배송 정보</span>
+    </div>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="pFill" style="width:33%"></div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+
+  <!-- ── STEP 1 ── -->
+  <div class="card active" id="step1">
+    <div class="card-title">업체 정보</div>
+
+    <div class="field">
+      <label class="field-label">회사명 <span class="req">*</span></label>
+      <input type="text" id="company" placeholder="예) 쿠앤코수비드">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">담당자 이름 <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="홍길동">
+      </div>
+      <div class="field">
+        <label class="field-label">연락처 <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="010-0000-0000">
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-next" style="flex:1" onclick="goStep(2)">다음 단계 →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2 ── -->
+  <div class="card" id="step2">
+    <div class="card-title">상품 정보</div>
+
+    <div class="field">
+      <label class="field-label">보관방법 <span class="req">*</span></label>
+      <div class="pill-group">
+        <div class="pill" data-name="storage" data-val="냉동" onclick="selectPill('storage', this)">❄️ 냉동</div>
+        <div class="pill" data-name="storage" data-val="냉장" onclick="selectPill('storage', this)">🌡️ 냉장</div>
+        <div class="pill" data-name="storage" data-val="동결" onclick="selectPill('storage', this)">🧊 동결</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">가공방법</label>
+      <div class="pill-group">
+        <div class="pill selected" style="pointer-events:none;">원물</div>
+        <div class="pill" style="opacity:0.35; pointer-events:none; cursor:not-allowed;">세절 (준비중)</div>
+        <div class="pill" style="opacity:0.35; pointer-events:none; cursor:not-allowed;">슬라이스 (준비중)</div>
+      </div>
+    </div>
+
+    <div style="height:1px; background:var(--gray-5); margin:4px 0 16px;"></div>
+
+    <div class="add-panel">
+      <div class="add-panel-title">상품 추가</div>
+
+      <div class="field">
+        <label class="field-label">축종 <span class="req">*</span></label>
+        <div class="pill-group" id="catGroup">
+          <div class="pill" data-val="수입소" onclick="selectCat(this)">🐄 수입소</div>
+          <div class="pill" data-val="수입돼지" onclick="selectCat(this)">🐷 수입돼지</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">품목 <span class="req">*</span></label>
+        <div class="search-wrap">
+          <input class="search-input" id="itemSearch" placeholder="축종을 먼저 선택해주세요"
+            oninput="onItemSearch()" onfocus="onItemFocus()" autocomplete="off" disabled>
+          <div class="dropdown" id="itemDrop"></div>
+        </div>
+        <div class="tag-area" id="itemTag"></div>
+      </div>
+
+      <div class="field" id="originField" style="display:none">
+        <label class="field-label">원산지 <span class="req">*</span></label>
+        <div class="pill-group" id="originPills"></div>
+      </div>
+
+      <div id="detailFields" style="display:none">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">수량 <span class="req">*</span></label>
+            <div style="position:relative">
+              <input type="number" id="panelQty" placeholder="0" min="1" style="padding-right:38px">
+              <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--gray-3)">kg</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">브랜드 <span class="opt">(선택)</span></label>
+            <div class="search-wrap">
+              <input class="search-input" id="panelBrand" placeholder="브랜드 검색..."
+                oninput="filterPanelDD('brands')" onfocus="openPanelDD('brands')" autocomplete="off">
+              <div class="dropdown" id="panelBrandDrop"></div>
+            </div>
+            <div class="tag-area" id="panelBrandTags"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">등급 <span class="opt">(선택)</span></label>
+            <div class="search-wrap">
+              <input class="search-input" id="panelGrade" placeholder="등급 검색..."
+                oninput="filterPanelDD('grades')" onfocus="openPanelDD('grades')" autocomplete="off">
+              <div class="dropdown" id="panelGradeDrop"></div>
+            </div>
+            <div class="tag-area" id="panelGradeTags"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-add" id="btnAdd" onclick="addProduct()" style="display:none">+ 상품 추가하기</button>
+    </div>
+
+    <div id="productList" class="product-list"></div>
+
+    <div class="nav-row" style="margin-top:20px">
+      <button class="btn-prev" onclick="goStep(1)">← 이전</button>
+      <button class="btn-next" onclick="goStep(3)">다음 단계 →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3 ── -->
+  <div class="card" id="step3">
+    <div class="card-title">배송 정보</div>
+
+    <div class="field">
+      <label class="field-label">희망 배송일 <span class="req">*</span></label>
+      <input type="date" id="delivDate">
+    </div>
+
+    <div class="field">
+      <label class="field-label">수령 방식 <span class="req">*</span></label>
+      <div class="pill-group">
+        <div class="pill" data-name="delivery" data-val="창고 직접 수령" onclick="selectPill('delivery',this);toggleAddr()">🏭 창고 직접 수령</div>
+        <div class="pill" data-name="delivery" data-val="배송 희망" onclick="selectPill('delivery',this);toggleAddr()">🚚 배송 희망</div>
+      </div>
+    </div>
+
+    <div class="address-section" id="addrSection">
+      <div class="field">
+        <label class="field-label">배송지 주소 <span class="req">*</span></label>
+        <input type="text" id="addr1" placeholder="도로명 주소">
+        <input type="text" id="addr2" placeholder="상세 주소 (동, 층, 호 등)" style="margin-top:8px">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">기타 요청사항 <span class="opt">(선택)</span></label>
+      <textarea id="notes" placeholder="특이사항, 규격, 포장 방법 등 자유롭게 적어주세요"></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-prev" onclick="goStep(2)">← 이전</button>
+      <button class="btn-next" id="submitBtn" onclick="submitForm()">견적 요청하기 ✓</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon-wrap">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 16L13 23L26 9" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>견적 요청 완료!</h2>
+    <p>담당자가 최저가 업체를 선별하여<br>빠른 시일 내에 카카오톡으로 안내드립니다.<br><br>감사합니다 🙏</p>
+  </div>
+
+</div><!-- /form-wrap -->
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+const DATA = {
+  '수입소': {
+    items: ['갈비박근(립캡)','갈비본살','갈비살/늑간살','갈비살/늑간살(조각)','곱창','꼬리','끝목심/넥미트','대동맥','대창','덴버컷(살치살)','도가니','뒷사태','등갈비/백립','등갈비/백립(#2스펙)','등심','등심추리','떡심','립리블렛','립엔드','립캡','립팁','목뼈','목심','백립(조각백립)','부채살','분쇄육','블록컷목심','뿔살','사골','사골(뒷왕사골)','사태','삼치살','삼각살','삼겹양지','삼겹양지(조각)','설깃','설도','센터컷','숏로인','숏립앤드','스지','스지(뒷스지)','스페어립','아랫등심(큐브롤)','아롱사태','안심','안창살','알목심','알전각/볼라전각','앞/척갈비','앞다리/전각','앞사태','양(깐양)','양깃머리','양지','양지갈비','양지늑간','양지안창','업진안살','우둔','우설','우신','윗등심/척로스트','윗등심/척아이롤','일반갈비','일반갈비(송아지)','작업양지','잡육','조각갈비','진갈비살','차돌박이','차돌양지','채끝등심','척갈비살/늑간살','척리블렛','척뼈립','치마살','토시살','토시살(조각)','티본','플랭크스테이크','학본','헤드미트','홍두깨','홍창/소막창','황제늑간','BBQ등갈비','LA갈비'],
+    origins: ['뉴질랜드','덴마크','멕시코','미국','아르헨티나','아일랜드','우루과이','칠레','캐나다','호주'],
+    brands: ['1855(블랙앵거스)','5STAR','그린니아','그린다이아몬드','그린마운틴','그린햄','놀란','놀란(와규)','당당한컷','당당한컷(소)','대니쉬크라운(덴마크)','던미트(DAWN MEATS)','뎀코타','디아만티나','디아만티나(와규)','랄프','로키어벨리','마가렛리버(와규)','마이어(MEYER)','미드필드','미텍스','브랜트','브롤리비프','블랙오팔(와규)','블루리본','빈다리','산초쿠(와규)','산타라','샘케인/STX','쇼케이스','수까르네','스위프트','스위프트(블랙앵거스)','스텐브룩','실버펀팜','써던리버','아이오와 프리미엄비프','아프코','어퍼아이오와앵거스비프','얼라이언스','엑셀','엑셀(스털링실버)','엑셀(ESA/앵거스)','엑셀(PSA/앵거스)','엑셀(RRA/앵거스)','엘그로(와규)','오로라','오로라 앵거스 비프','오마하','오마하(클래식헤어포드)','오코너','오키','오키(블랙앵거스)','오키(와규)','우드워드','위리저브','윙햄','유니버설','임페리얼밸리(블랙앵거스)','잭스크리크','존디','카라라(와규)','카지노','캐내디언 다이아몬드 비프','콜스','크릭스톤','킬코이','킹리버(와규)','토마스','트루웨스트','티스','티스(블랙)','판도','프리고오소노','프리몬트','하비','해리스랜치','AACO(와규)','ABP','ACC','AFG','AFG(서버스 초이스)','AFG(슈퍼 프라임)','AMG','AMH','AMP','AP/ESA(앵거스)','CAG','ECT','GBP','GREENSTOCK/울워스','IBP','JBS','NB','NBP','OMUGI','SRF(와규)','TBS','TCA'],
+    grades: ['셀렉트','언그레이드','초이스','프라임','A','AA','AAA','BEEF','BMS6~8','BULL','CAB','COW','GF','MB0~3','MB1','MB2','MB2~3','MB3','MB3UP','MB4~5','MB6~7','MB7','MB8~9','MB8UP','PR','PS','S','VEAL','YG','YGGF','YP','YPGF']
+  },
+  '수입돼지': {
+    items: ['갈매기살','갈비','갈비살/늑간살','단족/미니족','대패삼겹살','돈두(머리)','등뼈','등심','등심덧살(가브리살)','등심추리','로인립(모돈)','로인립/등갈비','로인솔더엔드','롤삼겹살','막창','목뼈','목살','목전지','미박미추리삼겹/오겹살','미박사태','미박삼겹살(국내가공)','미박삼겹살/오겹살','미박앞사태(순살족발)','미박전지','미추리삼겹살','볼살','뼈등심','뼈삼겹살','삼겹살','삼겹살(모돈)','삼겹살(무연골)','삼겹살+목살','스페어립','스페어립(모돈)','아바니꼬','악어살','옆추리삼겹','오소리감투','우대전지','이겹살','장족','전지/앞다리','중족','플루마(등심)','학','항정살','항정살(국내가공)','후지'],
+    origins: ['네덜란드','덴마크','독일','멕시코','미국','벨기에','브라질','스웨덴','스페인','아일랜드','오스트리아','칠레','캐나다','포르투갈','폴란드','프랑스','핀란드','헝가리','호주'],
+    brands: ['가드','가틴','간트너','굿벨리','그로스퍼트너','놀슨','누드블리스','닥스버거','당당한컷','당당한컷(소)','대니쉬크라운','대니쉬크라운(덴마크)','데브라','데인포크','델라비','두메코','듀브레톤','란틀','랍텔','럭스','로드리게스','로부스토','로스데라','루돌프','르삭','리바삼','리테라','리테라(돈키호테)','마시아테로','마시아테로(듀록)','마처','마코바','마프리제스','마프리제스(듀록)','맥스아그로','메이플','몬트로닐','바우셀','바텔','바텔(듀록)','반랜드숏','반루이','버나드','베슬러','보나레아','블랙포크','사사(세나돈)','셀라','소코파','소쿨로','슈처프래쉬','스넬맨','스미스필드(팜랜드)','스웨거티','스위프트','스키바','스프링힐','시몬','시보드','썬포크','씨에라','아그로수퍼','아그로수퍼(고원돈)','아그로수퍼(슈퍼포크)','아베라','아비뇨','아비뇨(듀록)','아비랜드','아스타','아싸','알레한드로(듀록)','애니맥스','엘포조','올라포크','올리멜','웨스트블리스','웨스트포트','웨스트플레시','이베리코(로드리게스)','이베리코(마구사)','이베리코(산체스로메로)','이베리코(세뇨리오)','이베리코(아이레)','이베리코(엘포조)','이베리코(인카로사)','이베리코(코밥)','이베리코(피누라)','이베리코(ICP)','이지도로','인카로사','잔슨빌','주이아','케르멘','케켄','코네스토가','코렌','코렌(듀록)','코렌셀렉타(듀록)','코스타브라바','코스타푸드','코스터','코엑스카','콜스','콤팍소','키니톤','퇴니스','퇴니스(프리미엄)','티칸','파마데사','파이오니아','파텔','팍사','팜플로나','퓨어푸드','프레칸','프로안','프리빈','프리셀바','프리우사','하이라이프','하이마운틴','헝가리미트','호멜','홀스톤','화이트오크','AFG','GCM','GREENSTOCK/울워스','HK','HK스캔','HK푸드','IBP','IFT','JPA','OS','PPS','VION(독일)'],
+    grades: ['세보','암퇘지','베요타','프라임','하이암퇘지']
+  }
+};
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+// ═══ STATE ═══
+let currentCat = null;
+let currentItem = null;
+let panelOrigins = [];
+let panelBrands = [];
+let panelGrades = [];
+let products = [];
+let step = 1;
+const pctMap = { 1: 33, 2: 67, 3: 100 };
+
+// ═══ STEP NAV ═══
+function goStep(n) {
+  if (n > step && !validate(step)) return;
+  document.getElementById('step' + step).classList.remove('active');
+  step = n;
+  document.getElementById('step' + step).classList.add('active');
+  updateStepUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepUI() {
+  document.getElementById('pFill').style.width = pctMap[step] + '%';
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('sLabel' + i);
+    el.className = 'step-item' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+}
+
+function validate(n) {
+  if (n === 1) {
+    if (!v('company')) { alert('회사명을 입력해주세요.'); return false; }
+    if (!v('name'))    { alert('담당자 이름을 입력해주세요.'); return false; }
+    if (!v('phone'))   { alert('연락처를 입력해주세요.'); return false; }
+  }
+  if (n === 2) {
+    if (!document.querySelector('[data-name="storage"].selected')) { alert('보관방법을 선택해주세요.'); return false; }
+    if (products.length === 0) { alert('상품을 1개 이상 추가해주세요.'); return false; }
+  }
+  if (n === 3) {
+    if (!v('delivDate')) { alert('희망 배송일을 선택해주세요.'); return false; }
+    if (!document.querySelector('[data-name="delivery"].selected')) { alert('수령 방식을 선택해주세요.'); return false; }
+    const dv = document.querySelector('[data-name="delivery"].selected')?.dataset.val;
+    if (dv === '배송 희망' && !v('addr1')) { alert('배송지 주소를 입력해주세요.'); return false; }
+  }
+  return true;
+}
+
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+function selectPill(name, el) {
+  document.querySelectorAll(`[data-name="${name}"]`).forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ═══ 축종 선택 ═══
+function selectCat(el) {
+  document.querySelectorAll('#catGroup .pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  currentCat = el.dataset.val;
+  resetPanel(false);
+  document.getElementById('itemSearch').disabled = false;
+  document.getElementById('itemSearch').placeholder = '품목을 검색하여 선택...';
+}
+
+function resetPanel(clearCat = false) {
+  currentItem = null;
+  panelOrigins = []; panelBrands = []; panelGrades = [];
+  document.getElementById('itemSearch').value = '';
+  document.getElementById('itemTag').innerHTML = '';
+  document.getElementById('itemDrop').classList.remove('open');
+  document.getElementById('originField').style.display = 'none';
+  document.getElementById('detailFields').style.display = 'none';
+  document.getElementById('btnAdd').style.display = 'none';
+  ['panelQty','panelBrand','panelGrade'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['panelBrandTags','panelGradeTags'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
+  if (clearCat) { currentCat = null; if (document.getElementById('itemSearch')) { document.getElementById('itemSearch').disabled = true; document.getElementById('itemSearch').placeholder = '축종을 먼저 선택해주세요'; } }
+}
+
+// ═══ 품목 검색 ═══
+function onItemSearch() {
+  if (!currentCat) return;
+  const q = document.getElementById('itemSearch').value.trim().toLowerCase();
+  const used = products.filter(p => p.cat === currentCat).map(p => p.item);
+  const opts = DATA[currentCat].items.filter(o => o.toLowerCase().includes(q) && !used.includes(o));
+  const dd = document.getElementById('itemDrop');
+  dd.innerHTML = opts.length
+    ? opts.map(o => `<div class="dropdown-item" onclick="selectItem('${esc(o)}')">${o}</div>`).join('')
+    : `<div class="dropdown-item empty">검색 결과 없음</div>`;
+  dd.classList.add('open');
+}
+
+function onItemFocus() {
+  if (!currentCat) { alert('먼저 축종을 선택해주세요.'); document.getElementById('itemSearch').blur(); return; }
+  onItemSearch();
+}
+
+function selectItem(item) {
+  currentItem = item;
+  panelOrigins = [];
+  document.getElementById('itemSearch').value = item;
+  document.getElementById('itemTag').innerHTML = `<div class="tag">${item}<button class="tag-remove" onclick="clearItem()">×</button></div>`;
+  document.getElementById('itemDrop').classList.remove('open');
+  document.getElementById('originPills').innerHTML = DATA[currentCat].origins.map(o =>
+    `<div class="pill" onclick="toggleOriginPill(this,'${esc(o)}')">${o}</div>`
+  ).join('');
+  document.getElementById('originField').style.display = 'block';
+  document.getElementById('detailFields').style.display = 'block';
+  document.getElementById('btnAdd').style.display = 'block';
+}
+
+function clearItem() {
+  currentItem = null; panelOrigins = [];
+  document.getElementById('itemSearch').value = '';
+  document.getElementById('itemTag').innerHTML = '';
+  document.getElementById('originField').style.display = 'none';
+  document.getElementById('detailFields').style.display = 'none';
+  document.getElementById('btnAdd').style.display = 'none';
+}
+
+function toggleOriginPill(el, val) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) panelOrigins.push(val);
+  else panelOrigins = panelOrigins.filter(v => v !== val);
+}
+
+// ═══ 패널 드롭다운 (브랜드/등급) ═══
+function filterPanelDD(type) {
+  if (!currentCat) return;
+  const inputId = type === 'brands' ? 'panelBrand' : 'panelGrade';
+  const dropId  = type === 'brands' ? 'panelBrandDrop' : 'panelGradeDrop';
+  const sel = type === 'brands' ? panelBrands : panelGrades;
+  const q = (document.getElementById(inputId)?.value || '').trim().toLowerCase();
+  const opts = DATA[currentCat][type].filter(o => o.toLowerCase().includes(q) && !sel.includes(o));
+  const dd = document.getElementById(dropId);
+  dd.innerHTML = opts.length
+    ? opts.map(o => `<div class="dropdown-item" onclick="addPanelTag('${type}','${esc(o)}')">${o}</div>`).join('')
+    : `<div class="dropdown-item empty">결과 없음</div>`;
+  dd.classList.add('open');
+}
+
+function openPanelDD(type) { if (currentCat) filterPanelDD(type); }
+
+function addPanelTag(type, val) {
+  if (type === 'brands') { if (!panelBrands.includes(val)) panelBrands.push(val); document.getElementById('panelBrand').value = ''; document.getElementById('panelBrandDrop').classList.remove('open'); renderPanelTags('brands'); }
+  else { if (!panelGrades.includes(val)) panelGrades.push(val); document.getElementById('panelGrade').value = ''; document.getElementById('panelGradeDrop').classList.remove('open'); renderPanelTags('grades'); }
+}
+
+function removePanelTag(type, val) {
+  if (type === 'brands') panelBrands = panelBrands.filter(v => v !== val);
+  else panelGrades = panelGrades.filter(v => v !== val);
+  renderPanelTags(type);
+}
+
+function renderPanelTags(type) {
+  const areaId = type === 'brands' ? 'panelBrandTags' : 'panelGradeTags';
+  const vals = type === 'brands' ? panelBrands : panelGrades;
+  document.getElementById(areaId).innerHTML = vals.map(v =>
+    `<div class="tag">${v}<button class="tag-remove" onclick="removePanelTag('${type}','${esc(v)}')">×</button></div>`
+  ).join('');
+}
+
+// ═══ 상품 추가하기 ═══
+function addProduct() {
+  if (!currentCat) { alert('축종을 선택해주세요.'); return; }
+  if (!currentItem) { alert('품목을 선택해주세요.'); return; }
+  if (panelOrigins.length === 0) { alert('원산지를 1개 이상 선택해주세요.'); return; }
+  const qty = document.getElementById('panelQty').value;
+  if (!qty || parseFloat(qty) <= 0) { alert('수량을 입력해주세요.'); return; }
+
+  const storage = document.querySelector('[data-name="storage"].selected')?.dataset.val || '-';
+  products.push({ id: Date.now(), cat: currentCat, item: currentItem, origins: [...panelOrigins], qty, storage, processing: '원물', brands: [...panelBrands], grades: [...panelGrades] });
+  renderProductList();
+  resetPanel(false);
+}
+
+// ═══ 추가된 상품 목록 ═══
+function renderProductList() {
+  const list = document.getElementById(\'productList\');
+  if (products.length === 0) { list.innerHTML = \'\'; return; }
+  list.innerHTML = products.map(p => `
+    <div class="product-item">
+      <div class="product-item-header">
+        <div class="product-item-title">
+          <span class="product-item-cat">${p.cat}</span>${p.item}
+        </div>
+        <button class="product-item-remove" onclick="removeProduct(${p.id})">×</button>
+      </div>
+      <div class="product-item-body">
+        <div class="product-info-chip"><span class="chip-label">수량</span>${p.qty} kg</div>
+        <div class="product-info-chip"><span class="chip-label">원산지</span>${p.origins.join(\', \')}</div>
+        <div class="product-info-chip"><span class="chip-label">보관</span>${p.storage}</div>
+        <div class="product-info-chip"><span class="chip-label">가공</span>${p.processing}</div>
+        ${p.brands.length ? `<div class="product-info-chip"><span class="chip-label">브랜드</span>${p.brands.join(\', \')}</div>` : \'\'}
+        ${p.grades.length ? `<div class="product-info-chip"><span class="chip-label">등급</span>${p.grades.join(\', \')}</div>` : \'\'}
+      </div>
+    </div>`).join(\'\');
+}
+function removeProduct(id) {
+  products = products.filter(p => p.id !== id);
+  renderProductList();
+}
+
+// ═══ DELIVERY ═══
+function toggleAddr() {
+  const dv = document.querySelector('[data-name="delivery"].selected')?.dataset.val;
+  document.getElementById('addrSection').classList.toggle('visible', dv === '배송 희망');
+}
+
+// ═══ SUBMIT ═══
+async function submitForm() {
+  if (!validate(3)) return;
+  const dv = document.querySelector('[data-name="delivery"].selected')?.dataset.val;
+  const storage = document.querySelector('[data-name="storage"].selected')?.dataset.val;
+  const payload = {
+    timestamp: new Date().toLocaleString('ko-KR'),
+    company: v('company'), name: v('name'), phone: v('phone'),
+    category: [...new Set(products.map(p => p.cat))].join(', '),
+    items: JSON.stringify(products.map(p => ({ 축종: p.cat, 품목: p.item, 원산지: p.origins.join(', '), 수량: p.qty+'kg', 브랜드: p.brands.join(', ')||'- ', 등급: p.grades.join(', ')||'- ' }))),
+    storage, processing: '원물',
+    deliveryDate: v('delivDate'), deliveryMethod: dv,
+    address: dv === '배송 희망' ? (v('addr1')+' '+v('addr2')).trim() : '-',
+    notes: v('notes') || '-'
+  };
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzigDSZ1QfQoOHRBxWbOXYzhauUkJnmxsmmgjTeGdx9CwXiA398d-fv8mD3sTkPcmc/exec';
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '제출 중...'; btn.disabled = true;
+  try {
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    document.getElementById('step3').classList.remove('active');
+    document.getElementById('successScreen').classList.add('show');
+    document.getElementById('pFill').style.width = '100%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch(e) {
+    alert('제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+    btn.textContent = '견적 요청하기 ✓'; btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════
+function esc(s) { return s.replace(/'/g, "\\'"); }
+function safeid(s) { return s.replace(/[^a-zA-Z0-9가-힣]/g, '_'); }
+
+// 드롭다운 외부 클릭 닫기
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  }
+  if (!e.target.closest('.mini-search-wrap')) {
+    document.querySelectorAll('.mini-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// 오늘 이전 날짜 비활성화
+document.getElementById('delivDate').min = new Date().toISOString().split('T')[0];
+
+// ═══ 전화번호 자동 하이픈 ═══
+document.getElementById('phone').addEventListener('input', function(e) {
+  let val = e.target.value.replace(/[^0-9]/g, '');
+  if (val.length <= 3) {
+    e.target.value = val;
+  } else if (val.startsWith('02')) {
+    if (val.length <= 5)      e.target.value = val.slice(0,2) + '-' + val.slice(2);
+    else if (val.length <= 9) e.target.value = val.slice(0,2) + '-' + val.slice(2,5) + '-' + val.slice(5);
+    else                      e.target.value = val.slice(0,2) + '-' + val.slice(2,6) + '-' + val.slice(6,10);
+  } else {
+    if (val.length <= 6)       e.target.value = val.slice(0,3) + '-' + val.slice(3);
+    else if (val.length <= 10) e.target.value = val.slice(0,3) + '-' + val.slice(3,6) + '-' + val.slice(6);
+    else                       e.target.value = val.slice(0,3) + '-' + val.slice(3,7) + '-' + val.slice(7,11);
+  }
+});
+</script>
+</body>
+</html>
